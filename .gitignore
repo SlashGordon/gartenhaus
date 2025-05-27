@@ -172,3 +172,7 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+gartenhaus_exploded.step
+gartenhaus_inventory.json
+gartenhaus_parts.step
+gartenhaus.step
