@@ -1,5 +1,6 @@
 import json
 import cadquery as cq
+import math
 
 # Constants
 SPACING = 200
@@ -46,14 +47,22 @@ def get_roof_construction(
     cut_objects: CadQueryObjectList,
 ) -> CadQueryObjectList:
     distance = 485
+    # Calculate the original x-position
+    x_pos = ((beam_length) / 2) - (
+        (beam_length - (DEFAULT_FLOOR_LENGTH + DEFAULT_BEAM_WIDTH)) / 2
+    )
+
+    # Adjust the x-position for rotation
+    x_pos_after_rot = (
+        x_pos - (x_pos - beam_length / 2) * (1 - math.cos(math.radians(8))) + 1
+    )
     beam = (
         CadQueryObject("XY")
         .box(beam_length, beam_width, beam_height)
         .rotate((0, 0, 0), (0, 1, 0), 8)
         .translate(
             (
-                beam_length / 2
-                - (beam_length - (DEFAULT_FLOOR_LENGTH + DEFAULT_BEAM_WIDTH * 2)) / 2,
+                x_pos_after_rot,
                 1212.5,
                 2300,
             )
@@ -545,7 +554,7 @@ def main():
     cq.exporters.export(garden_house, "gartenhaus.step")
     cq.exporters.export(parts.union(), "gartenhaus_parts.step")
 
-    show_object(parts)
+    show_object(garden_house)
 
 
 main()
